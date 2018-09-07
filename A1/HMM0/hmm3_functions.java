@@ -5,72 +5,80 @@ public class hmm3{
 
 
 
-	public static ArrayList<ArrayList<Float>> GetBetaList(ArrayList<ArrayList<Float>> A1,ArrayList<ArrayList<Float>> B1, ArrayList<Integer> O1){
+	public static ArrayList<ArrayList<Double>> GetBetaList(ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B, ArrayList<Integer> ObsSeq,ArrayList<Double> AlphaSum){
 
-		ArrayList<ArrayList<Float>> entire_beta=new ArrayList<ArrayList<Float>>();
+		ArrayList<ArrayList<Double>> BetaList=new ArrayList<ArrayList<Double>>();
 
-		ArrayList<Float> initial_beta=new ArrayList<Float>();
-		int num_states=A1.size();
-		ArrayList<ArrayList<Float>> next_beta=new ArrayList<ArrayList<Float>>(); // twoD arraylist
+		ArrayList<Double> BetaInit=new ArrayList<Double>();
+		int NumStates=A.size();
+		ArrayList<ArrayList<Double>> NextBeta=new ArrayList<ArrayList<Double>>(); // twoD arraylist
 
-		for(int k=0;k<num_states;k++){
-			initial.beta.add(1);
+		for(int k=0;k<NumStates;k++){
+			BetaInit.add(1.0);
 		}
-		entire.beta.add(initial_beta);
-		ArrayList<ArrayList<Float>> prev_beta=new ArrayList<ArrayList<Float>>();
-		next_beta.add(initial_beta);
-		for(int j=1;j<O1.size();j++){
-			prev_beta=GetPrevBeta(next_beta,A1,B1,O1.get(O1.size()-j));
-			entire_beta.add(prev_beta.get(0));
-			next_beta=prev_beta;
+		ArrayList<ArrayList<Double>> temp=new ArrayList<ArrayList<Double>>();
+		BetaInit=GetScaledList(AlphaSum.get(AlphaSum.size()-1),temp.add(BetaInit)).get(0);
+		BetaList.add(BetaInit);
+
+		ArrayList<ArrayList<Double>> prev_beta=new ArrayList<ArrayList<Double>>();
+		NextBeta.add(BetaInit);
+		for(int j=1;j<ObsSeq.size();j++){
+			prev_beta=GetPrevBeta(NextBeta,A,B,ObsSeq.get(ObsSeq.size()-j));
+			prev_beta=GetScaledList(AlphaSum.get(AlphaSum.size()-1-j),prev_beta);
+			BetaList.add(prev_beta.get(0));
+			NextBeta=prev_beta;
 		}
-		Collections.reverse(entire_beta);
-		return entire_beta;
+		Collections.reverse(BetaList);
+		return BetaList;
 	}
 
-	public static ArrayList<ArrayList<ArrayList<Double>>> GetScaledAlphaBeta(ArrayList<ArrayList<Double>> Alpha, ArrayList<ArrayList<Double>> Beta){
+	public static ArrayList<ArrayList<Double>> GetScaledList(Double AplhaSum,ArrayList<ArrayList<Double>> Mat){
+
+		for(int i=0;i<Mat.get(0).size();i++){
+			Mat.get(0).set(i,Mat.get(0).get(i)/AlphaSum);
+		}
+
+		return Mat;
+	}
+	
+	public static Double GetSum(ArrayList<Double> li){
+		Double tmp_sum=0.0;
+		for(int i=0;i<li.size();i++){
+			tmp_sum+=li.get(i);
+		}
+		return tmp_sum;
+	}
+
+	public static ArrayList<ArrayList<ArrayList<Double>>> GetAlphaList(ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B,ArrayList<ArrayList<Double>> Pi,ArrayList<Integer> ObsSeq){
+
 		ArrayList<ArrayList<ArrayList<Double>>> MOut=new ArrayList<>();
-		ArrayList<ArrayList<Double>> Sum=new ArrayList<>();
-		ArrayList<Double> HoldSum=new ArrayList<>();
-		Double tmp=0.0;
-		//finding the sum
-		for(int i=0;i<Alpha.size();i++){
-			tmp=0.0;
-			for(int j=0;j<Alpha.get(0).size();j++){
-				tmp+=Alpha.get(i).get(j);
-			}
-			HoldSum.add(tmp);
-		}
-		Sum.add(HoldSum);
-		//Scaling 
-		for(int i=0;i<Alpha.size();i++){
-			for(int j=0;j<Alpha.get(0).size();j++){
-				Alpha.get(i).get(j)=Alpha.get(i).get(j)/(HoldSum.get(i));
-				Beta.get(i).get(j)=Beta.get(i).get(j)/(HoldSum.get(i));
-			}
-		}
-
-		MOut.add(Alpha);
-		MOut.add(Beta);
-		MOut.add(Sum);
-
-		return MOut;
-
-	}
-
-	public static ArrayList<ArrayList<Double>> GetAlphaList(ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B,ArrayList<ArrayList<Double>> Pi,ArrayList<Integer> ObsSeq){
-
 		ArrayList<ArrayList<Double>> AlphaList=new ArrayList<>();
+        ArrayList<ArrayList<Double>> Alpha = new ArrayList<>() ;
+        ArrayList<ArrayList<Double>> SumList=new ArrayList<>();
+        ArrayList<ArrayList<Double>> TempSum = new ArrayList<>() ;
+        Double Sum=0.0;
 
 		for(int i=0;i<ObsSeq.size();i++){
-			if(i == 0)
-                Alpha = GetObsProbInit(Pi, B,ObsSeq.get(i)).get(0) ;
-            	AlphaList.add(Alpha);
-            else
-                Alpha = GetObsProb(Alpha, A, B, ObsSeq.get(i)).get(0) ;
-            	AlphaList.add(Alpha);
+			if(i == 0){
+                            Alpha = GetObsProbInit(Pi, B,ObsSeq.get(i)) ;
+                            Sum=GetSum(Alpha.get(0));
+                            TempSum.add(Sum);
+                            Alpha=GetScaledList(Sum,Alpha);
+                            AlphaList.add(Alpha.get(0));
+                        }
+            else{
+                            Alpha = GetObsProb(Alpha, A, B, ObsSeq.get(i)) ;
+                            Sum=GetSum(Alpha.get(0));
+                            TempSum.add(Sum);
+                            Alpha=GetScaledList(Sum,Alpha);
+                            AlphaList.add(Alpha.get(0));
+                }
 		}
-		return AlphaList;
+		Mout.add(AlphaList);
+		SumList.add(TempSum);
+		MOut.add(SumList);
+		
+		return MOut;
 	}
 
 	public static ArrayList<ArrayList<Float>> Zeros(int row,int col){
