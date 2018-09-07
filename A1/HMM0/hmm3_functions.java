@@ -5,7 +5,7 @@ public class hmm3{
 
 
 
-	public static ArrayList<ArrayList<Float>> GetBetas(ArrayList<ArrayList<Float>> A1,ArrayList<ArrayList<Float>> B1, ArrayList<Integer> O1){
+	public static ArrayList<ArrayList<Float>> GetBetaList(ArrayList<ArrayList<Float>> A1,ArrayList<ArrayList<Float>> B1, ArrayList<Integer> O1){
 
 		ArrayList<ArrayList<Float>> entire_beta=new ArrayList<ArrayList<Float>>();
 
@@ -19,13 +19,58 @@ public class hmm3{
 		entire.beta.add(initial_beta);
 		ArrayList<ArrayList<Float>> prev_beta=new ArrayList<ArrayList<Float>>();
 		next_beta.add(initial_beta);
-		for(int j=1;j<0.size();j++){
+		for(int j=1;j<O1.size();j++){
 			prev_beta=GetPrevBeta(next_beta,A1,B1,O1.get(O1.size()-j));
 			entire_beta.add(prev_beta.get(0));
 			next_beta=prev_beta;
 		}
 		Collections.reverse(entire_beta);
 		return entire_beta;
+	}
+
+	public static ArrayList<ArrayList<ArrayList<Double>>> GetScaledAlphaBeta(ArrayList<ArrayList<Double>> Alpha, ArrayList<ArrayList<Double>> Beta){
+		ArrayList<ArrayList<ArrayList<Double>>> MOut=new ArrayList<>();
+		ArrayList<ArrayList<Double>> Sum=new ArrayList<>();
+		ArrayList<Double> HoldSum=new ArrayList<>();
+		Double tmp=0.0;
+		//finding the sum
+		for(int i=0;i<Alpha.size();i++){
+			tmp=0.0;
+			for(int j=0;j<Alpha.get(0).size();j++){
+				tmp+=Alpha.get(i).get(j);
+			}
+			HoldSum.add(tmp);
+		}
+		Sum.add(HoldSum);
+		//Scaling 
+		for(int i=0;i<Alpha.size();i++){
+			for(int j=0;j<Alpha.get(0).size();j++){
+				Alpha.get(i).get(j)=Alpha.get(i).get(j)/(HoldSum.get(i));
+				Beta.get(i).get(j)=Beta.get(i).get(j)/(HoldSum.get(i));
+			}
+		}
+
+		MOut.add(Alpha);
+		MOut.add(Beta);
+		MOut.add(Sum);
+
+		return MOut;
+
+	}
+
+	public static ArrayList<ArrayList<Double>> GetAlphaList(ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B,ArrayList<ArrayList<Double>> Pi,ArrayList<Integer> ObsSeq){
+
+		ArrayList<ArrayList<Double>> AlphaList=new ArrayList<>();
+
+		for(int i=0;i<ObsSeq.size();i++){
+			if(i == 0)
+                Alpha = GetObsProbInit(Pi, B,ObsSeq.get(i)).get(0) ;
+            	AlphaList.add(Alpha);
+            else
+                Alpha = GetObsProb(Alpha, A, B, ObsSeq.get(i)).get(0) ;
+            	AlphaList.add(Alpha);
+		}
+		return AlphaList;
 	}
 
 	public static ArrayList<ArrayList<Float>> Zeros(int row,int col){
