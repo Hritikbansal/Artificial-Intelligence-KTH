@@ -252,7 +252,7 @@ public class Matrix  {
     }
 
     public static ArrayList<ArrayList<Double>> Zeros(Integer RowCount,Integer ColCount){
-            ArrayList<ArrayList<Double>> Out=new ArrayList<ArrayList<Double>>();
+            ArrayList<ArrayList<Double>> Out=new ArrayList<>();
 
             for(int i=0;i<RowCount;i++){
                     ArrayList<Double> tmp=new ArrayList<Double>();
@@ -334,76 +334,83 @@ public class Matrix  {
         return Gamma ;
     }
     //Beta List Formation
-    	public static ArrayList<ArrayList<Double>> GetBetaList(ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B, ArrayList<Integer> ObsSeq){
+    public static ArrayList<ArrayList<Double>> GetBetaList(ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B, ArrayList<Integer> ObsSeq,ArrayList<Double> AlphaSum){
 
-		ArrayList<ArrayList<Double>> BetaList=new ArrayList<ArrayList<Double>>();
+        ArrayList<ArrayList<Double>> BetaList=new ArrayList<>();
 
-		ArrayList<Double> BetaInit=new ArrayList<Double>();
-		int NumStates=A.size();
-		ArrayList<ArrayList<Double>> NextBeta=new ArrayList<ArrayList<Double>>(); // twoD arraylist
+        ArrayList<Double> BetaInit=new ArrayList<>();
+        int NumStates=A.size();
+        ArrayList<ArrayList<Double>> NextBeta=new ArrayList<>(); // twoD arraylist
 
-		for(int k=0;k<NumStates;k++){
-			BetaInit.add(1.0);
+        for(int k=0;k<NumStates;k++){
+                BetaInit.add(1.0);
+        }
+        ArrayList<ArrayList<Double>> temp=new ArrayList<>();
+        temp.add(BetaInit) ;
+        BetaInit=GetScaledList(AlphaSum.get(AlphaSum.size()-1),temp).get(0);
+        BetaList.add(BetaInit);
+
+        ArrayList<ArrayList<Double>> prev_beta=new ArrayList<>();
+        NextBeta.add(BetaInit);
+        for(int j=1;j<ObsSeq.size();j++){
+                prev_beta=GetPrevBeta(NextBeta,A,B,ObsSeq.get(ObsSeq.size()-j));
+                prev_beta=GetScaledList(AlphaSum.get(AlphaSum.size()-1-j),prev_beta);
+                BetaList.add(prev_beta.get(0));
+                NextBeta=prev_beta;
+        }
+        Collections.reverse(BetaList);
+        return BetaList;
+    }
+
+	public static ArrayList<ArrayList<Double>> GetScaledList(Double Factor,ArrayList<ArrayList<Double>> Mat){
+
+		for(int i=0;i<Mat.get(0).size();i++){
+			Mat.get(0).set(i,Mat.get(0).get(i)/Factor);
 		}
-		BetaList.add(BetaInit);
-		ArrayList<ArrayList<Double>> prev_beta=new ArrayList<ArrayList<Double>>();
-		NextBeta.add(BetaInit);
-		for(int j=1;j<ObsSeq.size();j++){
-			prev_beta=GetPrevBeta(NextBeta,A,B,ObsSeq.get(ObsSeq.size()-j));
-			BetaList.add(prev_beta.get(0));
-			NextBeta=prev_beta;
-		}
-		Collections.reverse(BetaList);
-		return BetaList;
+
+		return Mat;
 	}
-    //Alpha List
-        public static ArrayList<ArrayList<ArrayList<Double>>> GetScaledAlphaBeta(ArrayList<ArrayList<Double>> AlphaList, ArrayList<ArrayList<Double>> BetaList){
-		ArrayList<ArrayList<ArrayList<Double>>> MOut=new ArrayList<>();
-		ArrayList<ArrayList<Double>> Sum=new ArrayList<>();
-		ArrayList<Double> AlphaSum=new ArrayList<>();
-		Double tmp=0.0;
-		//finding the sum
-		for(int i=0;i<AlphaList.size();i++){
-			tmp=0.0;
-			for(int j=0;j<AlphaList.get(0).size();j++){
-				tmp+=AlphaList.get(i).get(j);
-			}
-			AlphaSum.add(tmp);
+	
+	public static Double GetSum(ArrayList<Double> li){
+		Double tmp_sum=0.0;
+		for(int i=0;i<li.size();i++){
+			tmp_sum+=li.get(i);
 		}
-		Sum.add(AlphaSum);
-		//Scaling 
-		for(int i=0;i<AlphaList.size();i++){
-			for(int j=0;j<AlphaList.get(0).size();j++){
-				AlphaList.get(i).set(j,AlphaList.get(i).get(j)/(AlphaSum.get(i)));
-				BetaList.get(i).set(j,BetaList.get(i).get(j)/(AlphaSum.get(i)));
-			}
-		}
-
-		MOut.add(AlphaList);
-		MOut.add(BetaList);
-		MOut.add(Sum);
-
-		return MOut;
-
+		return tmp_sum;
 	}
 
-	public static ArrayList<ArrayList<Double>> GetAlphaList(ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B,ArrayList<ArrayList<Double>> Pi,ArrayList<Integer> ObsSeq){
+    public static ArrayList<ArrayList<ArrayList<Double>>> GetAlphaList(ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B,ArrayList<ArrayList<Double>> Pi,ArrayList<Integer> ObsSeq){
 
-		ArrayList<ArrayList<Double>> AlphaList=new ArrayList<>();
-                ArrayList<ArrayList<Double>> Alpha = new ArrayList<>() ;
+        ArrayList<ArrayList<ArrayList<Double>>> MOut=new ArrayList<>();
+        ArrayList<ArrayList<Double>> AlphaList=new ArrayList<>();
+        ArrayList<ArrayList<Double>> Alpha = new ArrayList<>() ;
+        ArrayList<ArrayList<Double>> SumList=new ArrayList<>();
+        ArrayList<Double> TempSum = new ArrayList<>() ;
+        Double Sum=0.0;
 
-		for(int i=0;i<ObsSeq.size();i++){
-			if(i == 0){
-                            Alpha = GetObsProbInit(Pi, B,ObsSeq.get(i)) ;
-                            AlphaList.add(Alpha.get(0));
-                        }
-                        else{
-                            Alpha = GetObsProb(Alpha, A, B, ObsSeq.get(i)) ;
-                            AlphaList.add(Alpha.get(0));
-                        }
-		}
-		return AlphaList;
-	}
+        for(int i=0;i<ObsSeq.size();i++){
+            if(i == 0){
+                Alpha = GetObsProbInit(Pi, B,ObsSeq.get(i)) ;
+                Sum=GetSum(Alpha.get(0));
+                TempSum.add(Sum);
+                Alpha=GetScaledList(Sum,Alpha);
+                AlphaList.add(Alpha.get(0));
+            }
+            else{
+                Alpha = GetObsProb(Alpha, A, B, ObsSeq.get(i)) ;
+                Sum=GetSum(Alpha.get(0));
+                TempSum.add(Sum);
+                Alpha=GetScaledList(Sum,Alpha);
+                AlphaList.add(Alpha.get(0));
+            }
+        }
+        SumList.add(TempSum);
+        
+        MOut.add(AlphaList);
+        MOut.add(SumList);
+
+        return MOut;
+    }
 
         
     //Convergence Condition
@@ -421,10 +428,11 @@ public class Matrix  {
     //Learning
     public static ArrayList<ArrayList<ArrayList<Double>>> LearnEpoch(ArrayList<ArrayList<Double>> A, ArrayList<ArrayList<Double>> B,ArrayList<ArrayList<Double>> Pi,ArrayList<Integer> ObsSeq){
         
-        ArrayList<ArrayList<ArrayList<Double>>> ScaledAlphaBeta = GetScaledAlphaBeta(GetAlphaList(A,B,Pi,ObsSeq),GetBetaList(A,B,ObsSeq)) ;
-        ArrayList<ArrayList<Double>> ScaledAlphaList = ScaledAlphaBeta.get(0) ;
-        ArrayList<ArrayList<Double>> ScaledBetaList =  ScaledAlphaBeta.get(1) ;
-        ArrayList<ArrayList<Double>> AlphaSum = ScaledAlphaBeta.get(2) ;
+        ArrayList<ArrayList<ArrayList<Double>>> ScaledAlphaAndAlphaSum = GetAlphaList(A,B,Pi,ObsSeq) ;
+        ArrayList<ArrayList<Double>> ScaledAlphaList = ScaledAlphaAndAlphaSum.get(0) ;
+        ArrayList<ArrayList<Double>> AlphaSum = ScaledAlphaAndAlphaSum.get(1) ;
+        ArrayList<ArrayList<Double>> ScaledBetaList =  GetBetaList(A,B,ObsSeq,AlphaSum.get(0)) ;
+        
 //        
 //Print Beta List
 //        System.out.println("BetaList");
@@ -512,12 +520,12 @@ public class Matrix  {
 //        System.out.println(Convergence(PrevAlpha,NewAlpha)) ;
             
         for (int i=0 ; i<NoEpochs ; i++){
-            
+            System.out.println("Iteration : "+i);
             PrevTemp = Temp ;
             Temp = LearnEpoch(PrevTemp.get(0), PrevTemp.get(1), Pi, ObsSeq) ;
-            if(!Convergence(PrevTemp.get(2),Temp.get(2))){
-                break ;
-            }
+//            if(!Convergence(PrevTemp.get(2),Temp.get(2))){
+//                break ;
+//            }
             
         }
         return PrevTemp ;
@@ -583,9 +591,9 @@ public class Matrix  {
         int e_row=sc.nextInt();
         int e_col=sc.nextInt();  //this is same as M(number of discrete observation states)
 
-        ArrayList<ArrayList<Double>> emi_vec=new ArrayList<ArrayList<Double>>();
+        ArrayList<ArrayList<Double>> emi_vec=new ArrayList<>();
         for(int i=0;i<e_row;i++){
-                ArrayList<Double> vec_tmp=new ArrayList<Double>();
+                ArrayList<Double> vec_tmp=new ArrayList<>();
                 for(int j=0;j<e_col;j++){
                         vec_tmp.add(sc.nextDouble());
                 }
@@ -596,8 +604,8 @@ public class Matrix  {
 
         int init_row=sc.nextInt();
         int init_col=sc.nextInt();
-        ArrayList<ArrayList<Double>> init_vec=new ArrayList<ArrayList<Double>>();
-        ArrayList<Double> vec_tmp=new ArrayList<Double>();
+        ArrayList<ArrayList<Double>> init_vec=new ArrayList<>();
+        ArrayList<Double> vec_tmp=new ArrayList<>();
         for(int i=0;i<init_col;i++){
                 vec_tmp.add(sc.nextDouble());			
         }
@@ -610,7 +618,7 @@ public class Matrix  {
     public static ArrayList<Integer> TakeInputObsSeq(Scanner sc){
         
         int obs_num=sc.nextInt();
-        ArrayList<Integer> obs_vec=new ArrayList<Integer>();
+        ArrayList<Integer> obs_vec=new ArrayList<>();
         
         for(int i=0;i<obs_num;i++){
                 int f=sc.nextInt();
@@ -748,7 +756,7 @@ public class Matrix  {
         System.out.println("Observation Sequence");
         System.out.println(ObsSeq);
         
-        ArrayList<ArrayList<ArrayList<Double>>> AB = Learn(Lambda.get(0),Lambda.get(1),Lambda.get(2), ObsSeq,3) ;
+        ArrayList<ArrayList<ArrayList<Double>>> AB = Learn(Lambda.get(0),Lambda.get(1),Lambda.get(2), ObsSeq,1) ;
         System.out.println("New A");
         System.out.println(AB.get(0));
         
