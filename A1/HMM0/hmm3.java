@@ -223,8 +223,8 @@ public class hmm3  {
                 MOut.add(Row) ;
             }
         }
-        ////System.out.println("debugg2");
-        ////System.out.println(MOut);
+        //////System.out.println("debugg2");
+        //////System.out.println(MOut);
         return MOut ;
 
     }
@@ -243,11 +243,11 @@ public class hmm3  {
         }
         
         for(int i=0 ; i<RowCount2 ; i++) {
-//            //System.out.println("MOut ColAdd Init");
-//            //System.out.println(MOut);
+//            ////System.out.println("MOut ColAdd Init");
+//            ////System.out.println(MOut);
             MOut.get(i).set(ColNo,M.get(i).get(ColNo)+V.get(0).get(i)) ;
-//            //System.out.println("MOut ColAdd After");
-//            //System.out.println(MOut);
+//            ////System.out.println("MOut ColAdd After");
+//            ////System.out.println(MOut);
         }
         return MOut ;
     }
@@ -298,27 +298,27 @@ public class hmm3  {
        ArrayList<ArrayList<Double>> Alpha = GetObsProbInit(Pi, B, ObsSeq.get(0)) ;
        for(int i=1 ; i<ObsSeq.size() ; i++){
            Alpha = GetObsProb(Alpha, A, B, ObsSeq.get(i)) ;
-           //System.out.println("Alpha at iter i = "+i);
-           //System.out.println(Alpha);
-       }
-        
-       
+           ////System.out.println("Alpha at iter i = "+i);
+           ////System.out.println(Alpha);
+       }       
        return Alpha ;
     }
     //Beta calculation
     public static ArrayList<ArrayList<Double>> GetPrevBeta(ArrayList<ArrayList<Double>> NextBeta, ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B, Integer Obs){
        ArrayList<ArrayList<Double>> Out = new ArrayList<>() ;
        Out.add(ElementWiseMult(NextBeta,B,0).get(Obs));
-       ArrayList<ArrayList<Double>> Beta = Mult(Out,A) ;
+       ////System.out.println("debugg3");
+       ////System.out.println(A);
+       ArrayList<ArrayList<Double>> Beta = Mult(Out,Transpose(A)) ;
        return Beta ;
     }
     //Di-gamma Calculation
     public static ArrayList<ArrayList<Double>> GetDiGamma(ArrayList<ArrayList<Double>> Alpha, ArrayList<ArrayList<Double>> Beta,ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B, Integer Obs){
         ArrayList<ArrayList<Double>> Temp = new ArrayList<>() ;
-        ////System.out.println("debugg1");
-        ////System.out.println(B);
+        //////System.out.println("debugg1");
+        //////System.out.println(B);
         Temp.add(Transpose(B).get(Obs)) ;
-        ////System.out.println(Transpose(B));
+        //////System.out.println(Transpose(B));
         ArrayList<ArrayList<Double>> Gamma =  ElementWiseMult(Temp,ElementWiseMatMult(Mult(Transpose(Alpha),Beta),A),1) ;
         return Gamma ;   
     }
@@ -358,15 +358,15 @@ public class hmm3  {
         NextBeta.add(BetaInit);
         for(int j=1;j<ObsSeq.size();j++){
                 prev_beta=GetPrevBeta(NextBeta,A,B,ObsSeq.get(ObsSeq.size()-j));
-                System.out.println("prev_beta");
-                System.out.println(prev_beta);
+                //System.out.println("prev_beta");
+                //System.out.println(prev_beta);
                 prev_beta=GetBetaScaledList(AlphaSum.get(AlphaSum.size()-1-j),prev_beta);
                 BetaList.add(prev_beta.get(0));
                 NextBeta=prev_beta;
         }
         Collections.reverse(BetaList);
-        //System.out.println("BetaList");
-        //System.out.println(BetaList);
+        ////System.out.println("BetaList");
+        ////System.out.println(BetaList);
         return BetaList;
     }
 
@@ -425,7 +425,7 @@ public class hmm3  {
         
         MOut.add(AlphaList);
         MOut.add(SumList);
-        //System.out.println(MOut);
+        ////System.out.println(MOut);
         return MOut;
     }
 
@@ -447,19 +447,19 @@ public class hmm3  {
         
         ArrayList<ArrayList<ArrayList<Double>>> ScaledAlphaAndAlphaSum = GetAlphaList(A,B,Pi,ObsSeq) ;
         ArrayList<ArrayList<Double>> ScaledAlphaList = ScaledAlphaAndAlphaSum.get(0) ;
-        System.out.println("ScaledAlpha");
-        System.out.println(ScaledAlphaList);
+        //System.out.println("ScaledAlpha");
+        //System.out.println(ScaledAlphaList);
         ArrayList<ArrayList<Double>> AlphaSum = ScaledAlphaAndAlphaSum.get(1) ;
-        System.out.println("AlphaSum");
-        System.out.println(AlphaSum);
+        //System.out.println("AlphaSum");
+        //System.out.println(AlphaSum);
         ArrayList<ArrayList<Double>> ScaledBetaList =  GetBetaList(A,B,ObsSeq,AlphaSum.get(0)) ;
-        System.out.println("ScaledBeta");
-        System.out.println(ScaledBetaList);
+        //System.out.println("ScaledBeta");
+        //System.out.println(ScaledBetaList);
         
 //        
 //Print Beta List
-//        //System.out.println("BetaList");
-//        //System.out.println(BetaList);
+//        ////System.out.println("BetaList");
+//        ////System.out.println(BetaList);
         ArrayList<ArrayList<Double>> ScaledAlpha = new ArrayList<>();
         ArrayList<ArrayList<Double>> ScaledBeta = new ArrayList<>();
         ArrayList<ArrayList<Double>> DiGamma = new ArrayList<>();
@@ -467,29 +467,29 @@ public class hmm3  {
         ArrayList<ArrayList<Double>> DiGammaSum = new ArrayList<>();
         ArrayList<ArrayList<Double>> GammaSum = new ArrayList<>();
         ArrayList<ArrayList<Double>> GammaSumObsSel = Zeros(B.size(),B.get(0).size()) ;
-//        //System.out.println("Intial GammaSumObsSel");
-//        //System.out.println(GammaSumObsSel);
+//        ////System.out.println("Intial GammaSumObsSel");
+//        ////System.out.println(GammaSumObsSel);
 
         ArrayList<ArrayList<Double>> NewA = new ArrayList<>();
         ArrayList<ArrayList<Double>> NewB = new ArrayList<>();
         ArrayList<ArrayList<Double>> NewPi = new ArrayList<>();
 
         for(int i=0 ; i<ObsSeq.size()-1 ; i++){
-//            //System.out.println("Iteration:  "+ i);
+//            ////System.out.println("Iteration:  "+ i);
             //check the list that you are taking
             ScaledAlpha.add(ScaledAlphaList.get(i)) ;
             ScaledBeta.add(ScaledBetaList.get(i+1)) ;
-            //System.out.println("ScaledAlpha");
-            //System.out.println(ScaledAlpha);
-            //System.out.println("ScaledBeta");
-            //System.out.println(ScaledBeta);
+            ////System.out.println("ScaledAlpha");
+            ////System.out.println(ScaledAlpha);
+            ////System.out.println("ScaledBeta");
+            ////System.out.println(ScaledBeta);
 
             DiGamma = GetDiGamma(ScaledAlpha, ScaledBeta, A, B, ObsSeq.get(i+1)) ;
-//            //System.out.println("DiGamma");
-//            //System.out.println(DiGamma);
+//            ////System.out.println("DiGamma");
+//            ////System.out.println(DiGamma);
             Gamma = GetGamma(DiGamma) ;
- //           //System.out.println("Gamma");
-//            //System.out.println(Gamma);
+ //           ////System.out.println("Gamma");
+//            ////System.out.println(Gamma);
             ScaledAlpha = new ArrayList<>() ;
             ScaledBeta = new ArrayList<>() ;
             if(i==0){
@@ -501,17 +501,17 @@ public class hmm3  {
                 DiGammaSum = ElementWiseMatAdd(DiGammaSum,DiGamma) ;
                 GammaSum = ElementWiseMatAdd(GammaSum,Gamma) ;
             } 
-            // System.out.println("Gamma");
-            // System.out.println(Gamma);
+            // //System.out.println("Gamma");
+            // //System.out.println(Gamma);
             GammaSumObsSel = ColAdd(Gamma,GammaSumObsSel, ObsSeq.get(i)) ;
-            // System.out.println("GammaSumObsSel");
-            // System.out.println(GammaSumObsSel);
-//            //System.out.println("DiGammaSum");
-//            //System.out.println(DiGamma);
-//            //System.out.println("GammaSum");
-//            //System.out.println(Gamma);
-//            //System.out.println("GammaSumObsSel");
-//            //System.out.println(GammaSumObsSel);
+            // //System.out.println("GammaSumObsSel");
+            // //System.out.println(GammaSumObsSel);
+//            ////System.out.println("DiGammaSum");
+//            ////System.out.println(DiGamma);
+//            ////System.out.println("GammaSum");
+//            ////System.out.println(Gamma);
+//            ////System.out.println("GammaSumObsSel");
+//            ////System.out.println(GammaSumObsSel);
         }
         NewA = Transpose(ElementWiseVecDivide(GammaSum,DiGammaSum,0)); 
         NewB = Transpose(ElementWiseVecDivide(GammaSum,GammaSumObsSel,0));
@@ -521,18 +521,18 @@ public class hmm3  {
         Out.add(NewB) ;
         Out.add(NewPi);
         Out.add(AlphaSum) ;
-        ////System.out.println("Out");
-        ////System.out.println(Out);
+        //////System.out.println("Out");
+        //////System.out.println(Out);
         return Out ;
     }   
     
     public static Double GetLogProb(ArrayList<Double> AlphaSum){
         Double sum=0.0;
-        System.out.println("size: "+AlphaSum.size());
+        //System.out.println("size: "+AlphaSum.size());
         for(int i=0;i<AlphaSum.size();i++){
             sum+=Math.log(AlphaSum.get(i));
         }
-        System.out.println("sum: "+sum);
+        //System.out.println("sum: "+sum);
         return sum;
     }
     
@@ -542,36 +542,28 @@ public class hmm3  {
         
         Temp = LearnEpoch(A, B, Pi, ObsSeq) ;
         
-        //System.out.println("New A");
-        //System.out.println(Temp.get(0));
+        ////System.out.println("New A");
+        ////System.out.println(Temp.get(0));
         
-        //System.out.println("New B");
-        //System.out.println(Temp.get(1));
+        ////System.out.println("New B");
+        ////System.out.println(Temp.get(1));
         Double oldlogprob=-Double.POSITIVE_INFINITY;
         Double newlogprob;
-//        ArrayList<ArrayList<Double>> NewAlpha = GetObsSeqProb(Pi, TempA, TempB, ObsSeq) ;
-//        //System.out.println("PrevAlpha");
-//        //System.out.println(PrevAlpha);
-//        
-//        //System.out.println("NewAlpha");
-//        //System.out.println(NewAlpha);
-        
-//        //System.out.println("Convergence");
-//        //System.out.println(Convergence(PrevAlpha,NewAlpha)) ;
+
         for (int i=1 ; i<NoEpochs ; i++){
-            System.out.println("Iteration : "+i);
+            //System.out.println("Iteration : "+i);
             PrevTemp = Temp ;
             
             oldlogprob=GetLogProb(PrevTemp.get(3).get(0));
-            System.out.println("oldlogprob");
-            System.out.println(oldlogprob);
+            //System.out.println("oldlogprob");
+            //System.out.println(oldlogprob);
 
             Temp = LearnEpoch(PrevTemp.get(0), PrevTemp.get(1), PrevTemp.get(2), ObsSeq) ;
             newlogprob=GetLogProb(Temp.get(3).get(0));
             
-            System.out.println("newlogprob");
-            System.out.println(newlogprob);
-            if(newlogprob<oldlogprob){
+            //System.out.println("newlogprob");
+            //System.out.println(newlogprob);
+            if(newlogprob>oldlogprob){
                  return PrevTemp ;
              }            
         }
@@ -639,11 +631,11 @@ public class hmm3  {
     public static void RetVal(ArrayList<ArrayList<ArrayList<Double>>> Out){
         
         ArrayList<ArrayList<Double>> A=Out.get(0);
-        //System.out.println("A: "+A);
+        ////System.out.println("A: "+A);
         int Arow=A.size();
         int Acol=A.get(0).size();
         ArrayList<ArrayList<Double>> B=Out.get(1);
-        //System.out.println("B: "+B);
+        ////System.out.println("B: "+B);
         int Brow=B.size();
         int Bcol=B.get(0).size();
         
@@ -680,25 +672,7 @@ public class hmm3  {
         Scanner sc=new Scanner(System.in);
         ArrayList<ArrayList<ArrayList<Double>>> Lambda = TakeInputLambda(sc) ;
         ArrayList<Integer> ObsSeq = TakeInputObsSeq(sc) ;
-        /*
-        ////System.out.println("Input A");
-        ////System.out.println(Lambda.get(0));
-        
-        ////System.out.println("Input B");
-        ////System.out.println(Lambda.get(1));
-        
-        //System.out.println("Input Pi");
-        //System.out.println(Lambda.get(2));
-        
-        //System.out.println("Observation Sequence");
-        //System.out.println(ObsSeq);
-        */
-        ArrayList<ArrayList<ArrayList<Double>>> AB = Learn(Lambda.get(0),Lambda.get(1),Lambda.get(2), ObsSeq,2) ;
-        //System.out.println("New A");
-        //System.out.println(AB.get(0));
-        
-        //System.out.println("New B");
-        //System.out.println(AB.get(1));
+        ArrayList<ArrayList<ArrayList<Double>>> AB = Learn(Lambda.get(0),Lambda.get(1),Lambda.get(2), ObsSeq,25) ;
         
         RetVal(AB);
     }  
