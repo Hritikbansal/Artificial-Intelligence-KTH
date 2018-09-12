@@ -13,14 +13,14 @@ import java.math.*;
  *
  */
 public class hmm3  {
-    public static ArrayList<ArrayList<Double>> Mult(ArrayList<ArrayList<Double>> M1, ArrayList<ArrayList<Double>> M2){
+    public static ArrayList<ArrayList<Float>> Mult(ArrayList<ArrayList<Float>> M1, ArrayList<ArrayList<Float>> M2){
         Integer RowCount1 = M1.size() ;
         Integer ColCount1 = M1.get(0).size() ;
         Integer RowCount2 = M2.size() ;
         Integer ColCount2 = M2.get(0).size() ;
-        Double Sum ;
-        ArrayList<Double> Row ;
-        ArrayList<ArrayList<Double>> MOut = new ArrayList<>();
+        Float Sum ;
+        ArrayList<Float> Row ;
+        ArrayList<ArrayList<Float>> MOut = new ArrayList<>();
         
         if(!ColCount1.equals(RowCount2)){
             throw new IllegalArgumentException("ColCount1 not equal to RowCount2") ;
@@ -28,7 +28,7 @@ public class hmm3  {
         for(int i=0 ; i<RowCount1 ; i++){
             Row = new ArrayList<>();
             for(int j=0; j<ColCount2 ; j++){
-                Sum=0.0 ;
+                Sum=(float)0 ;
                 for(int k=0 ; k<ColCount1 ; k++){
                     Sum += M1.get(i).get(k)*M2.get(k).get(j) ;
                 }
@@ -39,14 +39,14 @@ public class hmm3  {
         return MOut ;
     }
     
-    public static ArrayList<ArrayList<Double>> MaxMult(ArrayList<ArrayList<Double>> M1, ArrayList<ArrayList<Double>> M2){
+    public static ArrayList<ArrayList<Float>> MaxMult(ArrayList<ArrayList<Float>> M1, ArrayList<ArrayList<Float>> M2){
         Integer RowCount1 = M1.size() ;
         Integer ColCount1 = M1.get(0).size() ;
         Integer RowCount2 = M2.size() ;
         Integer ColCount2 = M2.get(0).size() ;
-        Double Max, Term ;
-        ArrayList<Double> Row ;
-        ArrayList<ArrayList<Double>> MOut = new ArrayList<>();
+        Float Max, Term ;
+        ArrayList<Float> Row ;
+        ArrayList<ArrayList<Float>> MOut = new ArrayList<>();
 
         if(!ColCount1.equals(RowCount2)){
             throw new IllegalArgumentException("ColCount1 not equal to RowCount2") ;
@@ -54,7 +54,7 @@ public class hmm3  {
         for(int i=0 ; i<RowCount1 ; i++){
             Row = new ArrayList<>();
             for(int j=0; j<ColCount2 ; j++){
-                Max=0.0 ;
+                Max=(float)0 ;
                 for(int k=0 ; k<ColCount1 ; k++){
                     Term =  M1.get(i).get(k)*M2.get(k).get(j) ;
                     if(Max< Term)
@@ -67,9 +67,9 @@ public class hmm3  {
         return MOut ;
     }
     
-    public static ArrayList<ArrayList<Double>> Transpose(ArrayList<ArrayList<Double>> M){
-        ArrayList<Double> Row ;
-        ArrayList<ArrayList<Double>> MOut = new ArrayList<>();
+    public static ArrayList<ArrayList<Float>> Transpose(ArrayList<ArrayList<Float>> M){
+        ArrayList<Float> Row ;
+        ArrayList<ArrayList<Float>> MOut = new ArrayList<>();
         Integer RowCount = M.size() ;
         Integer ColCount = M.get(0).size() ;
 
@@ -83,13 +83,13 @@ public class hmm3  {
         return MOut ;
     }
 
-    public static ArrayList<ArrayList<Double>> ElementWiseMult(ArrayList<ArrayList<Double>> V, ArrayList<ArrayList<Double>> M, Integer RowWise){
+    public static ArrayList<ArrayList<Float>> ElementWiseMult(ArrayList<ArrayList<Float>> V, ArrayList<ArrayList<Float>> M, Integer RowWise){
         Integer RowCount1 = V.size() ;
         Integer ColCount1 = V.get(0).size() ;
         Integer RowCount2 = M.size() ;
         Integer ColCount2 = M.get(0).size() ;
-        ArrayList<Double> Row ;
-        ArrayList<ArrayList<Double>> MOut = new ArrayList<>();
+        ArrayList<Float> Row ;
+        ArrayList<ArrayList<Float>> MOut = new ArrayList<>();
         
         if(RowWise.equals(0)){
             if(!RowCount1.equals(1)){
@@ -128,13 +128,13 @@ public class hmm3  {
         return MOut ;
 
     }
-    public static ArrayList<ArrayList<Double>> ElementWiseMatMult(ArrayList<ArrayList<Double>> M1, ArrayList<ArrayList<Double>> M2){
+    public static ArrayList<ArrayList<Float>> ElementWiseMatMult(ArrayList<ArrayList<Float>> M1, ArrayList<ArrayList<Float>> M2){
         Integer RowCount1 = M1.size() ;
         Integer ColCount1 = M1.get(0).size() ;
         Integer RowCount2 = M2.size() ;
         Integer ColCount2 = M2.get(0).size() ;
-        ArrayList<Double> Row;
-        ArrayList<ArrayList<Double>> MOut = new ArrayList<ArrayList<Double>>();
+        ArrayList<Float> Row;
+        ArrayList<ArrayList<Float>> MOut = new ArrayList<ArrayList<Float>>();
 
             if(!RowCount1.equals(RowCount2)){
                 throw new IllegalArgumentException("rowcount1 is not equal to rowcount2") ;
@@ -155,13 +155,13 @@ public class hmm3  {
 
     }
     
-    public static ArrayList<ArrayList<Double>> ElementWiseMatAdd(ArrayList<ArrayList<Double>> M1, ArrayList<ArrayList<Double>> M2){
+    public static ArrayList<ArrayList<Float>> ElementWiseMatAdd(ArrayList<ArrayList<Float>> M1, ArrayList<ArrayList<Float>> M2){
         Integer RowCount1 = M1.size() ;
         Integer ColCount1 = M1.get(0).size() ;
         Integer RowCount2 = M2.size() ;
         Integer ColCount2 = M2.get(0).size() ;
-        ArrayList<Double> Row;
-        ArrayList<ArrayList<Double>> MOut = new ArrayList<ArrayList<Double>>();
+        ArrayList<Float> Row;
+        ArrayList<ArrayList<Float>> MOut = new ArrayList<ArrayList<Float>>();
 
             if(!RowCount1.equals(RowCount2)){
                 throw new IllegalArgumentException("rowcount1 is not equal to rowcount2") ;
@@ -181,13 +181,13 @@ public class hmm3  {
         return MOut ;
     }
     
-    public static ArrayList<ArrayList<Double>> ElementWiseVecDivide(ArrayList<ArrayList<Double>> V, ArrayList<ArrayList<Double>> M, Integer RowWise){
+    public static ArrayList<ArrayList<Float>> ElementWiseVecDivide(ArrayList<ArrayList<Float>> V, ArrayList<ArrayList<Float>> M, Integer RowWise){
         Integer RowCount1 = V.size() ;
         Integer ColCount1 = V.get(0).size() ;
         Integer RowCount2 = M.size() ;
         Integer ColCount2 = M.get(0).size() ;
-        ArrayList<Double> Row ;
-        ArrayList<ArrayList<Double>> MOut = new ArrayList<>();
+        ArrayList<Float> Row ;
+        ArrayList<ArrayList<Float>> MOut = new ArrayList<>();
         
         if(RowWise.equals(0)){
             if(!RowCount1.equals(1)){
@@ -229,11 +229,11 @@ public class hmm3  {
 
     }
     
-    public static ArrayList<ArrayList<Double>> ColAdd(ArrayList<ArrayList<Double>> V, ArrayList<ArrayList<Double>> M, Integer ColNo){
+    public static ArrayList<ArrayList<Float>> ColAdd(ArrayList<ArrayList<Float>> V, ArrayList<ArrayList<Float>> M, Integer ColNo){
         Integer RowCount1 = V.size() ;
         Integer ColCount1 = V.get(0).size() ;
         Integer RowCount2 = M.size() ;
-        ArrayList<ArrayList<Double>> MOut = M;
+        ArrayList<ArrayList<Float>> MOut = M;
         
         if(!RowCount1.equals(1)){
             throw new IllegalArgumentException("1st Argument is not  vector");
@@ -252,13 +252,13 @@ public class hmm3  {
         return MOut ;
     }
 
-    public static ArrayList<ArrayList<Double>> Zeros(Integer RowCount,Integer ColCount){
-            ArrayList<ArrayList<Double>> Out=new ArrayList<>();
+    public static ArrayList<ArrayList<Float>> Zeros(Integer RowCount,Integer ColCount){
+            ArrayList<ArrayList<Float>> Out=new ArrayList<>();
 
             for(int i=0;i<RowCount;i++){
-                    ArrayList<Double> tmp=new ArrayList<Double>();
+                    ArrayList<Float> tmp=new ArrayList<Float>();
                     for(int j=0;j<ColCount;j++){
-                            tmp.add(0.0);
+                            tmp.add((float)0);
                     }
                     Out.add(tmp);
             }
@@ -266,9 +266,9 @@ public class hmm3  {
     }
 
 
-//    public static ArrayList<Double> GetColumn(ArrayList<ArrayList<Double>> M, Integer ColNo){
+//    public static ArrayList<Float> GetColumn(ArrayList<ArrayList<Float>> M, Integer ColNo){
 //        Integer RowCount = M.size() ;
-//        ArrayList<Double> Output = new ArrayList<>() ;
+//        ArrayList<Float> Output = new ArrayList<>() ;
 //        
 //        for(int i=0 ; i<RowCount ; i++){
 //            Output.add(M.get(i).get(ColNo)) ;
@@ -277,25 +277,25 @@ public class hmm3  {
 //    }
     
     // Alpha Calculation
-    public static ArrayList<ArrayList<Double>> GetObsProbInit(ArrayList<ArrayList<Double>> Pi, ArrayList<ArrayList<Double>> B, Integer Obs){
-        ArrayList<ArrayList<Double>> Out = ElementWiseMult(Pi,B,0) ;
-        ArrayList<ArrayList<Double>> Alpha = new ArrayList<>() ;
+    public static ArrayList<ArrayList<Float>> GetObsProbInit(ArrayList<ArrayList<Float>> Pi, ArrayList<ArrayList<Float>> B, Integer Obs){
+        ArrayList<ArrayList<Float>> Out = ElementWiseMult(Pi,B,0) ;
+        ArrayList<ArrayList<Float>> Alpha = new ArrayList<>() ;
         Alpha.add(Out.get(Obs)) ;
         return Alpha ;
     }
-    public static ArrayList<ArrayList<Double>> GetObsProb(ArrayList<ArrayList<Double>> PrevAlpha, ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B, Integer Obs){
-       ArrayList<ArrayList<Double>> Out = ElementWiseMult(Mult(PrevAlpha,A),B,0) ;
-       ArrayList<ArrayList<Double>> Alpha = new ArrayList<>() ;
+    public static ArrayList<ArrayList<Float>> GetObsProb(ArrayList<ArrayList<Float>> PrevAlpha, ArrayList<ArrayList<Float>> A,ArrayList<ArrayList<Float>> B, Integer Obs){
+       ArrayList<ArrayList<Float>> Out = ElementWiseMult(Mult(PrevAlpha,A),B,0) ;
+       ArrayList<ArrayList<Float>> Alpha = new ArrayList<>() ;
        Alpha.add(Out.get(Obs)) ;
        return Alpha ;
     }
     //Alpha calculation ended
-    public static ArrayList<ArrayList<Double>> GetObsSeqProb(ArrayList<ArrayList<Double>> Pi, ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B, ArrayList<Integer> ObsSeq){
+    public static ArrayList<ArrayList<Float>> GetObsSeqProb(ArrayList<ArrayList<Float>> Pi, ArrayList<ArrayList<Float>> A,ArrayList<ArrayList<Float>> B, ArrayList<Integer> ObsSeq){
        
        if(ObsSeq.isEmpty()){
            throw new IllegalArgumentException("No observations found") ;
        }
-       ArrayList<ArrayList<Double>> Alpha = GetObsProbInit(Pi, B, ObsSeq.get(0)) ;
+       ArrayList<ArrayList<Float>> Alpha = GetObsProbInit(Pi, B, ObsSeq.get(0)) ;
        for(int i=1 ; i<ObsSeq.size() ; i++){
            Alpha = GetObsProb(Alpha, A, B, ObsSeq.get(i)) ;
            ////System.out.println("Alpha at iter i = "+i);
@@ -304,31 +304,31 @@ public class hmm3  {
        return Alpha ;
     }
     //Beta calculation
-    public static ArrayList<ArrayList<Double>> GetPrevBeta(ArrayList<ArrayList<Double>> NextBeta, ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B, Integer Obs){
-       ArrayList<ArrayList<Double>> Out = new ArrayList<>() ;
+    public static ArrayList<ArrayList<Float>> GetPrevBeta(ArrayList<ArrayList<Float>> NextBeta, ArrayList<ArrayList<Float>> A,ArrayList<ArrayList<Float>> B, Integer Obs){
+       ArrayList<ArrayList<Float>> Out = new ArrayList<>() ;
        Out.add(ElementWiseMult(NextBeta,B,0).get(Obs));
        ////System.out.println("debugg3");
        ////System.out.println(A);
-       ArrayList<ArrayList<Double>> Beta = Mult(Out,Transpose(A)) ;
+       ArrayList<ArrayList<Float>> Beta = Mult(Out,Transpose(A)) ;
        return Beta ;
     }
     //Di-gamma Calculation
-    public static ArrayList<ArrayList<Double>> GetDiGamma(ArrayList<ArrayList<Double>> Alpha, ArrayList<ArrayList<Double>> Beta,ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B, Integer Obs){
-        ArrayList<ArrayList<Double>> Temp = new ArrayList<>() ;
+    public static ArrayList<ArrayList<Float>> GetDiGamma(ArrayList<ArrayList<Float>> Alpha, ArrayList<ArrayList<Float>> Beta,ArrayList<ArrayList<Float>> A,ArrayList<ArrayList<Float>> B, Integer Obs){
+        ArrayList<ArrayList<Float>> Temp = new ArrayList<>() ;
         //////System.out.println("debugg1");
         //////System.out.println(B);
         Temp.add(Transpose(B).get(Obs)) ;
         //////System.out.println(Transpose(B));
-        ArrayList<ArrayList<Double>> Gamma =  ElementWiseMult(Temp,ElementWiseMatMult(Mult(Transpose(Alpha),Beta),A),1) ;
+        ArrayList<ArrayList<Float>> Gamma =  ElementWiseMult(Temp,ElementWiseMatMult(Mult(Transpose(Alpha),Beta),A),1) ;
         return Gamma ;   
     }
     //Gaama Calculation
-    public static ArrayList<ArrayList<Double>> GetGamma(ArrayList<ArrayList<Double>> DiGamma){
-        ArrayList<ArrayList<Double>> Gamma = new ArrayList<>() ;
-        ArrayList<Double> Row = new ArrayList<>() ;
-        Double Sum ;
+    public static ArrayList<ArrayList<Float>> GetGamma(ArrayList<ArrayList<Float>> DiGamma){
+        ArrayList<ArrayList<Float>> Gamma = new ArrayList<>() ;
+        ArrayList<Float> Row = new ArrayList<>() ;
+        Float Sum ;
         for(int i=0 ; i<DiGamma.size() ; i++) {
-            Sum = 0.0 ;
+            Sum = (float)0 ;
             for(int j=0 ; j<DiGamma.size() ; j++){
                 Sum+=DiGamma.get(i).get(j) ;
             }
@@ -338,23 +338,23 @@ public class hmm3  {
         return Gamma ;
     }
     //Beta List Formation
-    public static ArrayList<ArrayList<Double>> GetBetaList(ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B, ArrayList<Integer> ObsSeq,ArrayList<Double> AlphaSum){
+    public static ArrayList<ArrayList<Float>> GetBetaList(ArrayList<ArrayList<Float>> A,ArrayList<ArrayList<Float>> B, ArrayList<Integer> ObsSeq,ArrayList<Float> AlphaSum){
 
-        ArrayList<ArrayList<Double>> BetaList=new ArrayList<>();
-        ArrayList<Double> BetaInit=new ArrayList<>();
+        ArrayList<ArrayList<Float>> BetaList=new ArrayList<>();
+        ArrayList<Float> BetaInit=new ArrayList<>();
         int NumStates=A.size();
-        ArrayList<ArrayList<Double>> NextBeta=new ArrayList<>(); // twoD arraylist
+        ArrayList<ArrayList<Float>> NextBeta=new ArrayList<>(); // twoD arraylist
 
         for(int k=0;k<NumStates;k++){
-                BetaInit.add(1.0);
+                BetaInit.add((float)1);
         }
 
-        ArrayList<ArrayList<Double>> temp=new ArrayList<>();
+        ArrayList<ArrayList<Float>> temp=new ArrayList<>();
         temp.add(BetaInit) ;
         BetaInit=GetBetaScaledList(AlphaSum.get(AlphaSum.size()-1),temp).get(0);
         BetaList.add(BetaInit);
 
-        ArrayList<ArrayList<Double>> prev_beta=new ArrayList<>();
+        ArrayList<ArrayList<Float>> prev_beta=new ArrayList<>();
         NextBeta.add(BetaInit);
         for(int j=1;j<ObsSeq.size();j++){
                 prev_beta=GetPrevBeta(NextBeta,A,B,ObsSeq.get(ObsSeq.size()-j));
@@ -370,7 +370,7 @@ public class hmm3  {
         return BetaList;
     }
 
-	public static ArrayList<ArrayList<Double>> GetBetaScaledList(Double Factor,ArrayList<ArrayList<Double>> Mat){
+	public static ArrayList<ArrayList<Float>> GetBetaScaledList(Float Factor,ArrayList<ArrayList<Float>> Mat){
 
 		for(int i=0;i<Mat.get(0).size();i++){
 			Mat.get(0).set(i,Mat.get(0).get(i)/Factor);
@@ -379,7 +379,7 @@ public class hmm3  {
 		return Mat;
 	}
 
-    public static ArrayList<ArrayList<Double>> GetAlphaScaledList(Double Factor,ArrayList<ArrayList<Double>> Mat){
+    public static ArrayList<ArrayList<Float>> GetAlphaScaledList(Float Factor,ArrayList<ArrayList<Float>> Mat){
 
         for(int i=0;i<Mat.get(0).size();i++){
             Mat.get(0).set(i,Mat.get(0).get(i)/Factor);
@@ -388,22 +388,22 @@ public class hmm3  {
         return Mat;
     }
 	
-	public static Double GetSum(ArrayList<Double> li){
-		Double tmp_sum=0.0;
+	public static Float GetSum(ArrayList<Float> li){
+		Float tmp_sum=(float)0;
 		for(int i=0;i<li.size();i++){
 			tmp_sum+=li.get(i);
 		}
 		return tmp_sum;
 	}
 
-    public static ArrayList<ArrayList<ArrayList<Double>>> GetAlphaList(ArrayList<ArrayList<Double>> A,ArrayList<ArrayList<Double>> B,ArrayList<ArrayList<Double>> Pi,ArrayList<Integer> ObsSeq){
+    public static ArrayList<ArrayList<ArrayList<Float>>> GetAlphaList(ArrayList<ArrayList<Float>> A,ArrayList<ArrayList<Float>> B,ArrayList<ArrayList<Float>> Pi,ArrayList<Integer> ObsSeq){
 
-        ArrayList<ArrayList<ArrayList<Double>>> MOut=new ArrayList<>();
-        ArrayList<ArrayList<Double>> AlphaList=new ArrayList<>();
-        ArrayList<ArrayList<Double>> Alpha = new ArrayList<>() ;
-        ArrayList<ArrayList<Double>> SumList=new ArrayList<>();
-        ArrayList<Double> TempSum = new ArrayList<>() ;
-        Double Sum=0.0;
+        ArrayList<ArrayList<ArrayList<Float>>> MOut=new ArrayList<>();
+        ArrayList<ArrayList<Float>> AlphaList=new ArrayList<>();
+        ArrayList<ArrayList<Float>> Alpha = new ArrayList<>() ;
+        ArrayList<ArrayList<Float>> SumList=new ArrayList<>();
+        ArrayList<Float> TempSum = new ArrayList<>() ;
+        Float Sum=(float)0;
 
         for(int i=0;i<ObsSeq.size();i++){
             if(i == 0){
@@ -431,28 +431,28 @@ public class hmm3  {
 
         
     //Convergence Condition
-        public static Boolean Convergence(ArrayList<ArrayList<Double>> PrevAlphaSum, ArrayList<ArrayList<Double>> NewAlphaSum){
-            Double Sum=0.0;
+        public static Boolean Convergence(ArrayList<ArrayList<Float>> PrevAlphaSum, ArrayList<ArrayList<Float>> NewAlphaSum){
+            Float Sum=(float)0;
             
             for(int i=0;i<PrevAlphaSum.get(0).size();i++){
-                Sum+=Math.log(PrevAlphaSum.get(0).get(i)) - Math.log(NewAlphaSum.get(0).get(i));
+                Sum+=(float)Math.log(PrevAlphaSum.get(0).get(i)) - (float)Math.log(NewAlphaSum.get(0).get(i));
             }
-            if(Sum>=0.0)
+            if(Sum>=(float)0)
                 return true ;
             else
                 return false ;    
         }
     //Learning
-    public static ArrayList<ArrayList<ArrayList<Double>>> LearnEpoch(ArrayList<ArrayList<Double>> A, ArrayList<ArrayList<Double>> B,ArrayList<ArrayList<Double>> Pi,ArrayList<Integer> ObsSeq){
+    public static ArrayList<ArrayList<ArrayList<Float>>> LearnEpoch(ArrayList<ArrayList<Float>> A, ArrayList<ArrayList<Float>> B,ArrayList<ArrayList<Float>> Pi,ArrayList<Integer> ObsSeq){
         
-        ArrayList<ArrayList<ArrayList<Double>>> ScaledAlphaAndAlphaSum = GetAlphaList(A,B,Pi,ObsSeq) ;
-        ArrayList<ArrayList<Double>> ScaledAlphaList = ScaledAlphaAndAlphaSum.get(0) ;
+        ArrayList<ArrayList<ArrayList<Float>>> ScaledAlphaAndAlphaSum = GetAlphaList(A,B,Pi,ObsSeq) ;
+        ArrayList<ArrayList<Float>> ScaledAlphaList = ScaledAlphaAndAlphaSum.get(0) ;
         //System.out.println("ScaledAlpha");
         //System.out.println(ScaledAlphaList);
-        ArrayList<ArrayList<Double>> AlphaSum = ScaledAlphaAndAlphaSum.get(1) ;
+        ArrayList<ArrayList<Float>> AlphaSum = ScaledAlphaAndAlphaSum.get(1) ;
         //System.out.println("AlphaSum");
         //System.out.println(AlphaSum);
-        ArrayList<ArrayList<Double>> ScaledBetaList =  GetBetaList(A,B,ObsSeq,AlphaSum.get(0)) ;
+        ArrayList<ArrayList<Float>> ScaledBetaList =  GetBetaList(A,B,ObsSeq,AlphaSum.get(0)) ;
         //System.out.println("ScaledBeta");
         //System.out.println(ScaledBetaList);
         
@@ -460,19 +460,19 @@ public class hmm3  {
 //Print Beta List
 //        ////System.out.println("BetaList");
 //        ////System.out.println(BetaList);
-        ArrayList<ArrayList<Double>> ScaledAlpha = new ArrayList<>();
-        ArrayList<ArrayList<Double>> ScaledBeta = new ArrayList<>();
-        ArrayList<ArrayList<Double>> DiGamma = new ArrayList<>();
-        ArrayList<ArrayList<Double>> Gamma = new ArrayList<>();
-        ArrayList<ArrayList<Double>> DiGammaSum = new ArrayList<>();
-        ArrayList<ArrayList<Double>> GammaSum = new ArrayList<>();
-        ArrayList<ArrayList<Double>> GammaSumObsSel = Zeros(B.size(),B.get(0).size()) ;
+        ArrayList<ArrayList<Float>> ScaledAlpha = new ArrayList<>();
+        ArrayList<ArrayList<Float>> ScaledBeta = new ArrayList<>();
+        ArrayList<ArrayList<Float>> DiGamma = new ArrayList<>();
+        ArrayList<ArrayList<Float>> Gamma = new ArrayList<>();
+        ArrayList<ArrayList<Float>> DiGammaSum = new ArrayList<>();
+        ArrayList<ArrayList<Float>> GammaSum = new ArrayList<>();
+        ArrayList<ArrayList<Float>> GammaSumObsSel = Zeros(B.size(),B.get(0).size()) ;
 //        ////System.out.println("Intial GammaSumObsSel");
 //        ////System.out.println(GammaSumObsSel);
 
-        ArrayList<ArrayList<Double>> NewA = new ArrayList<>();
-        ArrayList<ArrayList<Double>> NewB = new ArrayList<>();
-        ArrayList<ArrayList<Double>> NewPi = new ArrayList<>();
+        ArrayList<ArrayList<Float>> NewA = new ArrayList<>();
+        ArrayList<ArrayList<Float>> NewB = new ArrayList<>();
+        ArrayList<ArrayList<Float>> NewPi = new ArrayList<>();
 
         for(int i=0 ; i<ObsSeq.size()-1 ; i++){
 //            ////System.out.println("Iteration:  "+ i);
@@ -516,7 +516,7 @@ public class hmm3  {
         NewA = Transpose(ElementWiseVecDivide(GammaSum,DiGammaSum,0)); 
         NewB = Transpose(ElementWiseVecDivide(GammaSum,GammaSumObsSel,0));
         
-        ArrayList<ArrayList<ArrayList<Double>>> Out = new ArrayList<>() ;
+        ArrayList<ArrayList<ArrayList<Float>>> Out = new ArrayList<>() ;
         Out.add(NewA) ;
         Out.add(NewB) ;
         Out.add(NewPi);
@@ -526,19 +526,19 @@ public class hmm3  {
         return Out ;
     }   
     
-    public static Double GetLogProb(ArrayList<Double> AlphaSum){
-        Double sum=0.0;
+    public static Float GetLogProb(ArrayList<Float> AlphaSum){
+        Float sum=(float)0;
         //System.out.println("size: "+AlphaSum.size());
         for(int i=0;i<AlphaSum.size();i++){
-            sum+=Math.log(AlphaSum.get(i));
+            sum+=(float)Math.log(AlphaSum.get(i));
         }
         //System.out.println("sum: "+sum);
         return sum;
     }
     
-    public static ArrayList<ArrayList<ArrayList<Double>>> Learn(ArrayList<ArrayList<Double>> A, ArrayList<ArrayList<Double>> B,ArrayList<ArrayList<Double>> Pi,ArrayList<Integer> ObsSeq, Integer NoEpochs){
-        ArrayList<ArrayList<ArrayList<Double>>> Temp = new ArrayList<>() ;
-        ArrayList<ArrayList<ArrayList<Double>>> PrevTemp = new ArrayList<>() ;
+    public static ArrayList<ArrayList<ArrayList<Float>>> Learn(ArrayList<ArrayList<Float>> A, ArrayList<ArrayList<Float>> B,ArrayList<ArrayList<Float>> Pi,ArrayList<Integer> ObsSeq, Integer NoEpochs){
+        ArrayList<ArrayList<ArrayList<Float>>> Temp = new ArrayList<>() ;
+        ArrayList<ArrayList<ArrayList<Float>>> PrevTemp = new ArrayList<>() ;
         
         Temp = LearnEpoch(A, B, Pi, ObsSeq) ;
         
@@ -547,8 +547,8 @@ public class hmm3  {
         
         ////System.out.println("New B");
         ////System.out.println(Temp.get(1));
-        Double oldlogprob=-Double.POSITIVE_INFINITY;
-        Double newlogprob;
+        Float oldlogprob=-Float.POSITIVE_INFINITY;
+        Float newlogprob;
 
         for (int i=1 ; i<NoEpochs ; i++){
             //System.out.println("Iteration : "+i);
@@ -563,7 +563,7 @@ public class hmm3  {
             
             //System.out.println("newlogprob");
             //System.out.println(newlogprob);
-            if(newlogprob>oldlogprob){
+            if(newlogprob<oldlogprob){
                  return PrevTemp ;
              }            
         }
@@ -573,16 +573,16 @@ public class hmm3  {
 
     
 
-    public static ArrayList<ArrayList<ArrayList<Double>>> TakeInputLambda(Scanner sc){
-        ArrayList<ArrayList<ArrayList<Double>>> Out = new ArrayList<>();
+    public static ArrayList<ArrayList<ArrayList<Float>>> TakeInputLambda(Scanner sc){
+        ArrayList<ArrayList<ArrayList<Float>>> Out = new ArrayList<>();
         // initial estimate of transition matrix
         int t_row=sc.nextInt();
         int t_col=sc.nextInt();
-        ArrayList<ArrayList<Double>> trans_vec=new ArrayList<ArrayList<Double>>();
+        ArrayList<ArrayList<Float>> trans_vec=new ArrayList<ArrayList<Float>>();
         for(int i=0;i<t_row;i++){
-                ArrayList<Double> vec_tmp=new ArrayList<Double>();
+                ArrayList<Float> vec_tmp=new ArrayList<Float>();
                 for(int j=0;j<t_col;j++){
-                        vec_tmp.add(sc.nextDouble());
+                        vec_tmp.add(sc.nextFloat());
                 }
                 trans_vec.add(vec_tmp);
         }
@@ -592,11 +592,11 @@ public class hmm3  {
         int e_row=sc.nextInt();
         int e_col=sc.nextInt();  //this is same as M(number of discrete observation states)
 
-        ArrayList<ArrayList<Double>> emi_vec=new ArrayList<>();
+        ArrayList<ArrayList<Float>> emi_vec=new ArrayList<>();
         for(int i=0;i<e_row;i++){
-                ArrayList<Double> vec_tmp=new ArrayList<>();
+                ArrayList<Float> vec_tmp=new ArrayList<>();
                 for(int j=0;j<e_col;j++){
-                        vec_tmp.add(sc.nextDouble());
+                        vec_tmp.add(sc.nextFloat());
                 }
                 emi_vec.add(vec_tmp);
         }
@@ -605,10 +605,10 @@ public class hmm3  {
 
         int init_row=sc.nextInt();
         int init_col=sc.nextInt();
-        ArrayList<ArrayList<Double>> init_vec=new ArrayList<>();
-        ArrayList<Double> vec_tmp=new ArrayList<>();
+        ArrayList<ArrayList<Float>> init_vec=new ArrayList<>();
+        ArrayList<Float> vec_tmp=new ArrayList<>();
         for(int i=0;i<init_col;i++){
-                vec_tmp.add(sc.nextDouble());			
+                vec_tmp.add(sc.nextFloat());			
         }
 
         init_vec.add(vec_tmp);
@@ -628,13 +628,13 @@ public class hmm3  {
         return obs_vec ;
     }
     
-    public static void RetVal(ArrayList<ArrayList<ArrayList<Double>>> Out){
+    public static void RetVal(ArrayList<ArrayList<ArrayList<Float>>> Out){
         
-        ArrayList<ArrayList<Double>> A=Out.get(0);
+        ArrayList<ArrayList<Float>> A=Out.get(0);
         ////System.out.println("A: "+A);
         int Arow=A.size();
         int Acol=A.get(0).size();
-        ArrayList<ArrayList<Double>> B=Out.get(1);
+        ArrayList<ArrayList<Float>> B=Out.get(1);
         ////System.out.println("B: "+B);
         int Brow=B.size();
         int Bcol=B.get(0).size();
@@ -650,7 +650,7 @@ public class hmm3  {
         int k=2;
         for(int i=0;i<Arow;i++){
             for(int j=0;j<Acol;j++){
-                str_A[k]=Double.toString(A.get(i).get(j));
+                str_A[k]=Float.toString(A.get(i).get(j));
                 k+=1;
             }
         }
@@ -658,7 +658,7 @@ public class hmm3  {
         int l=2;
         for(int i=0;i<Brow;i++){
             for(int j=0;j<Bcol;j++){
-                str_B[l]=Double.toString(B.get(i).get(j));
+                str_B[l]=Float.toString(B.get(i).get(j));
                 l+=1;
             }
         }
@@ -670,9 +670,9 @@ public class hmm3  {
     public static void main(String[] args){
 
         Scanner sc=new Scanner(System.in);
-        ArrayList<ArrayList<ArrayList<Double>>> Lambda = TakeInputLambda(sc) ;
+        ArrayList<ArrayList<ArrayList<Float>>> Lambda = TakeInputLambda(sc) ;
         ArrayList<Integer> ObsSeq = TakeInputObsSeq(sc) ;
-        ArrayList<ArrayList<ArrayList<Double>>> AB = Learn(Lambda.get(0),Lambda.get(1),Lambda.get(2), ObsSeq,25) ;
+        ArrayList<ArrayList<ArrayList<Float>>> AB = Learn(Lambda.get(0),Lambda.get(1),Lambda.get(2), ObsSeq,25) ;
         
         RetVal(AB);
     }  
