@@ -24,29 +24,56 @@ public class HMM {
     ArrayList<ArrayList<Float>> Pi = new ArrayList<>();
     ArrayList<Float> Row = new ArrayList<>();
     
-    public HMM(Integer noStates, Integer noObservations){
+     public HMM(Integer noStates, Integer noObservations){
+       
         for(int i = 0; i<noStates ; i++) {
+            Row=new ArrayList<>();
+            float sum=0;
             for(int j=0 ; j<noStates ; j++){
-                Row.add(1/noStates + (float)(Math.random()-0.5)/noStates) ;
+                if(j!=noStates-1){
+                float temp=(float)Math.random()*((float)1/noStates);
+                sum+=temp;
+                Row.add(temp) ;
+
+                }
+                else{
+                    Row.add(1-sum);
+                }
             }
-            A.add(Row) ;
+            this.A.add(Row) ;
         }
         
-        Row = new ArrayList<>() ;
         for(int i = 0; i<noStates ; i++) {
+            Row=new ArrayList<>();
+            float sum=0;
             for(int j=0 ; j<noObservations ; j++){
-                Row.add(1/noObservations + (float)(Math.random()-0.5)/noObservations) ;
+                if(j!=noObservations-1){
+                float temp=(float)Math.random()*((float)1/noObservations);
+                sum+=temp;
+                Row.add(temp) ;
+                }
+                else{
+                    Row.add(1-sum);
+                }
             }
-            B.add(Row) ;
+            this.B.add(Row) ;
         }
         
-        Row = new ArrayList<>() ;
+        Row=new ArrayList<>();
+        float sum=0;
         for(int i = 0; i<noStates ; i++) {
-            Row.add(1/noObservations + (float)(Math.random()-0.5)/noObservations) ;  
+            if(i!=noStates-1){
+                float temp=(float)Math.random()*((float)1/noStates);
+                sum+=temp;
+                Row.add(temp) ;
+                }
+                else{
+                    Row.add(1-sum);
+                }                     
         }
-        Pi.add(Row) ;
-        
+        this.Pi.add(Row) ;     
     }
+    
     
     public HMM(ArrayList<ArrayList<Float>> A, ArrayList<ArrayList<Float>> B, ArrayList<ArrayList<Float>> Pi){
             this.numStates = A.size() ;
