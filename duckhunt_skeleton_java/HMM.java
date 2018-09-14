@@ -12,26 +12,14 @@ import java.util.Scanner;
  *
  * @author shrey
  */
-public class HMM {
-
-    /**
-     * @param args the command line arguments
-     */
-    Integer numStates ;
-    Integer numObservations ;
-    ArrayList<ArrayList<Float>> A = new ArrayList<>();
-    ArrayList<ArrayList<Float>> B = new ArrayList<>();
-    ArrayList<ArrayList<Float>> Pi = new ArrayList<>();
-    ArrayList<Float> Row = new ArrayList<>();
-    
-     public HMM(Integer noStates, Integer noObservations){
+public HMM(Integer noStates, Integer noObservations){
        
         for(int i = 0; i<noStates ; i++) {
             Row=new ArrayList<>();
             float sum=0;
             for(int j=0 ; j<noStates ; j++){
                 if(j!=noStates-1){
-                float temp=(float)Math.random()*((float)1/noStates);
+                float temp=(float)((Math.random()*0.1)+0.9)*((float)1/noStates);
                 sum+=temp;
                 Row.add(temp) ;
 
@@ -48,7 +36,7 @@ public class HMM {
             float sum=0;
             for(int j=0 ; j<noObservations ; j++){
                 if(j!=noObservations-1){
-                float temp=(float)Math.random()*((float)1/noObservations);
+                float temp=(float)((Math.random()*0.1)+0.9)*((float)1/noObservations);
                 sum+=temp;
                 Row.add(temp) ;
                 }
@@ -63,7 +51,7 @@ public class HMM {
         float sum=0;
         for(int i = 0; i<noStates ; i++) {
             if(i!=noStates-1){
-                float temp=(float)Math.random()*((float)1/noStates);
+                float temp=(float)((Math.random()*0.1)+0.9)*((float)1/noStates);
                 sum+=temp;
                 Row.add(temp) ;
                 }
@@ -71,9 +59,10 @@ public class HMM {
                     Row.add(1-sum);
                 }                     
         }
-        this.Pi.add(Row) ;     
+        this.Pi.add(Row) ;
+        
     }
-    
+        
     
     public HMM(ArrayList<ArrayList<Float>> A, ArrayList<ArrayList<Float>> B, ArrayList<ArrayList<Float>> Pi){
             this.numStates = A.size() ;
