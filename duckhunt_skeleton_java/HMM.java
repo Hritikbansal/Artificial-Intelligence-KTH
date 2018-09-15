@@ -3,17 +3,43 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hmm;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Scanner;
 /**
  *
  * @author shrey
  */
-public HMM(Integer noStates, Integer noObservations){
-       
+public class HMM {
+
+    /**
+     * @param args the command line arguments
+     */
+    Integer numStates ;
+    Integer numObservations ;
+    Integer learnNum ;
+    ArrayList<ArrayList<Float>> A ;
+    ArrayList<ArrayList<Float>> B ;
+    ArrayList<ArrayList<Float>> Pi ;
+    ArrayList<ArrayList<Float>> LastAlpha ;
+    
+    
+//    public Boolean neverLearnt(){
+//        if(learnNum==0){
+//            return true ;
+//        }
+//        else{
+//            return false ;
+//        }
+//    }
+    public HMM(Integer noStates, Integer noObservations){
+        A = new ArrayList<>();
+        B = new ArrayList<>();
+        Pi = new ArrayList<>();
+        LastAlpha = new ArrayList<>();
+        ArrayList<Float> Row = new ArrayList<>();
         for(int i = 0; i<noStates ; i++) {
             Row=new ArrayList<>();
             float sum=0;
@@ -60,9 +86,45 @@ public HMM(Integer noStates, Integer noObservations){
                 }                     
         }
         this.Pi.add(Row) ;
-        
+//        this.learnNum = 0 ;
+        this.numStates = noStates ; 
+        this.numObservations = noObservations ;
+//        ArrayList<Float> Row = new ArrayList<>();
+//        for(int i = 0; i<noStates ; i++) {
+////            System.err.println("i:" +i);
+//            Row=new ArrayList<>();
+//            for(int j=0 ; j<noStates ; j++){
+////                System.err.println("j:" +j);
+//                float temp=(float)((float)(.5+Math.random())/noStates);
+//                
+//                Row.add(temp) ;
+//            }
+//            this.A.add(Row) ;
+//        }
+//            
+//        
+//        
+//        for(int i = 0; i<noStates ; i++) {
+//            Row=new ArrayList<>();
+//            for(int j=0 ; j<noObservations ; j++){
+//                float temp=(float)((.5+Math.random())/noObservations);
+//                Row.add(temp) ;
+//                }
+//            this.B.add(Row) ;
+//            }
+//            
+//        
+//        
+//        Row=new ArrayList<>();
+//        for(int j=0 ; j<noStates ; j++){
+//            float temp=(float)((.5+Math.random())/noStates);
+//            Row.add(temp) ;
+//            }
+//            
+//        this.Pi.add(Row) ;
+        this.learnNum = 0 ;
+   
     }
-        
     
     public HMM(ArrayList<ArrayList<Float>> A, ArrayList<ArrayList<Float>> B, ArrayList<ArrayList<Float>> Pi){
             this.numStates = A.size() ;
@@ -70,6 +132,7 @@ public HMM(Integer noStates, Integer noObservations){
             this.A = A ;
             this.B = B ;
             this.Pi = Pi ;
+            this.learnNum = 0 ;
     }
     
         // Alpha Calculation
@@ -81,6 +144,11 @@ public HMM(Integer noStates, Integer noObservations){
     }
     public ArrayList<ArrayList<Float>> GetAlpha(ArrayList<ArrayList<Float>> PrevAlpha,Integer Obs){
        ArrayList<ArrayList<Float>> Out = Matrix.ElementWiseMult(Matrix.Mult(PrevAlpha,A),B,0) ;
+//       if(Obs<0 || Obs>Out.get(0).size()){
+//           System.err.println("Observation out of range and equal to :"+ Obs);
+//       }
+//        System.err.println(Out.size());
+//        System.err.println(Obs);
        ArrayList<ArrayList<Float>> Alpha = new ArrayList<>() ;
        Alpha.add(Out.get(Obs)) ;
        return Alpha ;
@@ -88,14 +156,17 @@ public HMM(Integer noStates, Integer noObservations){
     //Alpha calculation ended
     
     //Probability of given observation sequence
-    public ArrayList<ArrayList<Float>> GetObsSeqProb(ArrayList<Integer> ObsSeq){
+    public ArrayList<ArrayList<Float>> GetLastAlpha(ArrayList<Integer> ObsSeq){
        
        if(ObsSeq.isEmpty()){
            throw new IllegalArgumentException("No observations found") ;
        }
        ArrayList<ArrayList<Float>> Alpha = GetAlphaInit(ObsSeq.get(0)) ;
+       Alpha = Matrix.ElementWiseScalerDivide(0.2f, Alpha) ;
        for(int i=1 ; i<ObsSeq.size() ; i++){
            Alpha = GetAlpha(Alpha,ObsSeq.get(i)) ;
+           Alpha = Matrix.ElementWiseScalerDivide(.2f, Alpha) ;
+
        }       
        return Alpha ;
     }
@@ -134,6 +205,8 @@ public HMM(Integer noStates, Integer noObservations){
         Gamma.add(Row) ;
         return Gamma ;
     }
+    
+    
     
     public ArrayList<ArrayList<ArrayList<Float>>> GetAlphaList(ArrayList<Integer> ObsSeq){
 
@@ -230,7 +303,8 @@ public HMM(Integer noStates, Integer noObservations){
         ArrayList<ArrayList<Float>> NewPi = new ArrayList<>();
 
         for(int i=0 ; i<ObsSeq.size()-1 ; i++){
-
+            ScaledAlpha = new ArrayList<>() ;
+            ScaledBeta = new ArrayList<>() ;
             ScaledAlpha.add(ScaledAlphaList.get(i)) ;
             ScaledBeta.add(ScaledBetaList.get(i+1)) ;
 
@@ -240,8 +314,7 @@ public HMM(Integer noStates, Integer noObservations){
             Gamma = GetGamma(DiGamma) ;
  //           ////System.out.println("Gamma");
 //            ////System.out.println(Gamma);
-            ScaledAlpha = new ArrayList<>() ;
-            ScaledBeta = new ArrayList<>() ;
+
             if(i==0){
                 DiGammaSum = DiGamma ;
                 GammaSum = Gamma ;
@@ -271,12 +344,15 @@ public HMM(Integer noStates, Integer noObservations){
         Out.add(NewB) ;
         Out.add(NewPi);
         Out.add(AlphaSum) ;
+        Out.add(ScaledAlpha) ;
         //////System.out.println("Out");
         //////System.out.println(Out);
         return Out ;
     }  
     
+    
     public ArrayList<ArrayList<ArrayList<Float>>> Learn(ArrayList<Integer> ObsSeq, Integer NoEpochs){
+        learnNum++ ;
         ArrayList<ArrayList<ArrayList<Float>>> Temp = new ArrayList<>() ;
         ArrayList<ArrayList<ArrayList<Float>>> PrevTemp = new ArrayList<>() ;
         
@@ -306,30 +382,57 @@ public HMM(Integer noStates, Integer noObservations){
                 A = Temp.get(0) ;
                 B = Temp.get(1) ;
                 Pi = Temp.get(2) ;
+                LastAlpha = Temp.get(4) ;
+                
             }
         }
         A = Temp.get(0) ;
         B = Temp.get(1) ;
         Pi = Temp.get(2) ;
+        LastAlpha = Temp.get(4) ;
         return Temp;
         
     }
+    public ArrayList<Float> PredictNextObservation (ArrayList<Integer> ObsSeq){
+//        ArrayList<ArrayList<Float>> LastAlpha = GetObsSeqProb(ObsSeq) ;
+        ArrayList<ArrayList<Float>> Temp = Matrix.Mult(Matrix.Mult(LastAlpha,A),B) ;
+//        System.err.println(Temp);
+        ArrayList<Float> Out = new ArrayList<>();
+        Float Max = 0f ;
+        Float MaxInd = 0f ;
+        for(int i=0 ; i<Temp.get(0).size() ; i++ ){
+            if(Temp.get(0).get(i) >Max ){
+                Max = Temp.get(0).get(i) ;
+                MaxInd = (float) i ;
+            }
+                
+        }
+        Out.add(Max) ;
+        Out.add(MaxInd) ;
+        
+        return Out ;
+        
+    }
     
-    public static void main(String[] args){
-
-    Scanner sc=new Scanner(System.in);
-    ArrayList<ArrayList<ArrayList<Float>>> Lambda = Matrix.TakeInputLambda(sc) ;
-//    ArrayList<ArrayList<ArrayList<Float>>> LambdaUsed = TakeInputLambda(sc) ;
-//    System.out.println(LambdaUsed);
-
-    ArrayList<Integer> ObsSeq = Matrix.TakeInputObsSeq(sc) ;
-    HMM Model = new HMM(Lambda.get(0),Lambda.get(1),Lambda.get(2)) ;
-//    System.out.println(Model);
-    ArrayList<ArrayList<ArrayList<Float>>> AB = Model.Learn(ObsSeq,50) ;
-//    PrintDist(AB,LambdaUsed) ;
-
-    Matrix.RetVal(AB);
-}  
+//    public static void main(String[] args){
+//
+////    Scanner sc=new Scanner(System.in);
+////    ArrayList<ArrayList<ArrayList<Float>>> Lambda = Matrix.TakeInputLambda(sc) ;
+//////    ArrayList<ArrayList<ArrayList<Float>>> LambdaUsed = TakeInputLambda(sc) ;
+//////    System.out.println(LambdaUsed);
+////
+////    ArrayList<Integer> ObsSeq = Matrix.TakeInputObsSeq(sc) ;
+////    HMM Model = new HMM(Lambda.get(0),Lambda.get(1),Lambda.get(2)) ;
+//////    System.out.println(Model);
+////    ArrayList<ArrayList<ArrayList<Float>>> AB = Model.Learn(ObsSeq,50) ;
+//////    PrintDist(AB,LambdaUsed) ;
+////
+////    Matrix.RetVal(AB);
+//        HMM model = new HMM(3,4) ;
+//        System.err.println("A: "+model.A);
+//        System.err.println("B: "+model.B);
+//        System.err.println("Pi: "+model.Pi);
+//}  
 
     
 }

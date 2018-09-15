@@ -10,6 +10,9 @@ public class Constants {
     public static final int SPECIES_SNIPE       = 4;
     public static final int SPECIES_BLACK_STORK = 5;
     public static final int COUNT_SPECIES       = 6;
+    
+    public static final int SEQUENCE_THRESHOLD     = 60 ;
+    public static final float PROB_THRESHOLD = (float).7 ;
 
     /**
      * These constants are used for representing the observations of a bird
