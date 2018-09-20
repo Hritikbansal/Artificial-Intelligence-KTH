@@ -38,11 +38,13 @@ public class Player {
         for(int i=0 ; i<nextStates.size() ; i++){
             System.err.println(i);
 //            value =1;
-            value = MiniMax(nextStates.elementAt(i),gameState.getNextPlayer()) ;
+            value = MiniMaxPruning(nextStates.elementAt(i),4,Integer.MIN_VALUE,Integer.MAX_VALUE,gameState.getNextPlayer()) ;
             if(value > bestValue){
                 bestValue = value ;
                 bestNextStateInd = i ;
+                
             }
+
         }
         if(bestNextStateInd == -1){
             System.err.println("No best state found");
@@ -51,66 +53,23 @@ public class Player {
         return nextStates.elementAt(bestNextStateInd) ;
     }    
     
-    public int MiniMax(GameState gameState, int player){
-        Vector<GameState> nextStates = new Vector<>();
-        gameState.findPossibleMoves(nextStates);
-        int bestPossible ;
-        int value ;
-      
-        if(gameState.isEOG())
-            return Evaluation(gameState) ;
-        
-        else if(player == PLAYER){
-            bestPossible = Integer.MIN_VALUE ;
-            for(int i=0 ; i<nextStates.size() ; i++){
-                value = MiniMax(nextStates.elementAt(i), OPPONENT) ;
-                bestPossible = Math.max(bestPossible, value) ;
-            }
-            return bestPossible ;
-        }
-        
-        else if(player == OPPONENT){
-            bestPossible = Integer.MAX_VALUE ;
-            for(int i=0 ; i<nextStates.size() ; i++){
-                value = MiniMax(nextStates.elementAt(i), PLAYER) ;
-                bestPossible = Math.min(bestPossible, value) ;
-            }
-            return bestPossible ;
-        
-        }
-        else{
-            return Integer.MIN_VALUE ;
-        }
-                
-    }
-        public int Evaluation (GameState gameState){
-//        System.err.println("Player.Evaluation()");
-        if(!(gameState.isOWin()||gameState.isXWin())) return 0 ;
-        else if((gameState.isXWin() && PLAYER == Constants.CELL_X) || (gameState.isOWin() && PLAYER == Constants.CELL_O)) return 1 ;
-        else return -1 ;
-        
-        
-        
-        
-    }
-    
-//    public int MiniMaxPruning(GameState gameState,int depth, int alpha, int beta, int player){
-//        
+//    public int MiniMax(GameState gameState, int player){
 //        Vector<GameState> nextStates = new Vector<>();
 //        gameState.findPossibleMoves(nextStates);
 //        int bestPossible ;
 //        int value ;
-//        System.err.println("Inside MinMax Depth=   "+depth) ;
-//        if(depth ==0 ||gameState.isEOG())
+//      
+//        if(gameState.isEOG())
 //            return Evaluation(gameState) ;
 //        
 //        else if(player == PLAYER){
 //            bestPossible = Integer.MIN_VALUE ;
 //            for(int i=0 ; i<nextStates.size() ; i++){
-//                value = MiniMaxPruning(nextStates.elementAt(i),depth-1, alpha, beta, OPPONENT) ;
+//                value = MiniMax(nextStates.elementAt(i), OPPONENT) ;
 //                bestPossible = Math.max(bestPossible, value) ;
-//                alpha = Math.max(bestPossible,alpha) ;
-//                if(beta<=alpha) break ;
+//                if(bestPossible > 1){
+//                break;
+//                }
 //            }
 //            return bestPossible ;
 //        }
@@ -118,68 +77,161 @@ public class Player {
 //        else if(player == OPPONENT){
 //            bestPossible = Integer.MAX_VALUE ;
 //            for(int i=0 ; i<nextStates.size() ; i++){
-//                value = MiniMaxPruning(nextStates.elementAt(i),depth-1, alpha, beta,PLAYER) ;
+//                value = MiniMax(nextStates.elementAt(i), PLAYER) ;
 //                bestPossible = Math.min(bestPossible, value) ;
-//                beta = Math.min(bestPossible, beta) ;
-//                if(beta<=alpha) break ;
+//                if(bestPossible < -1){
+//                break;
+//                }
 //            }
 //            return bestPossible ;
-//        
+//            
 //        }
-//        else
+//        else{
 //            return Integer.MIN_VALUE ;
+//        }
 //                
 //    }
+        public int Evaluation (GameState gameState){
+//        System.err.println("Player.Evaluation()");
+//        if(!(gameState.isOWin()||gameState.isXWin())) return 0 ;
+//        else if((gameState.isXWin() && PLAYER == Constants.CELL_X) || (gameState.isOWin() && PLAYER == Constants.CELL_O)) return 1 ;
+//        else return -1 ;
+
+            return getScore(gameState);
+
+    }
+    
+    public int MiniMaxPruning(GameState gameState,int depth, int alpha, int beta, int player){
+        
+        Vector<GameState> nextStates = new Vector<>();
+        gameState.findPossibleMoves(nextStates);
+        int bestPossible ;
+        int value ;
+        System.err.println("Inside MinMax Depth=   "+depth) ;
+        if(depth ==0 ||gameState.isEOG())
+            return Evaluation(gameState) ;
+        
+        else if(player == PLAYER){
+            bestPossible = Integer.MIN_VALUE ;
+            for(int i=0 ; i<nextStates.size() ; i++){
+                value = MiniMaxPruning(nextStates.elementAt(i),depth-1, alpha, beta, OPPONENT) ;
+                bestPossible = Math.max(bestPossible, value) ;
+                alpha = Math.max(bestPossible,alpha) ;
+                if(beta<=alpha) break ;
+            }
+            return bestPossible ;
+        }
+        
+        else if(player == OPPONENT){
+            bestPossible = Integer.MAX_VALUE ;
+            for(int i=0 ; i<nextStates.size() ; i++){
+                value = MiniMaxPruning(nextStates.elementAt(i),depth-1, alpha, beta,PLAYER) ;
+                bestPossible = Math.min(bestPossible, value) ;
+                beta = Math.min(bestPossible, beta) ;
+                if(beta<=alpha) break ;
+            }
+            return bestPossible ;
+        
+        }
+        else
+            return Integer.MIN_VALUE ;
+                
+    }
     
 
-//    public int getScore(GameState gameState , int player) {
-//        
-//        int score = 0 ;
-//        boolean full;
-//        
-//        //check rows
-//        for(int i=0 ; i<SIZE ;i++){
-//            full = true;
-//            for(int j=0 ; j<SIZE ; j++) {
-//                if(gameState.at(i,j)!= player){
-//                    full = false ;
-//                    break ;
-//                }
-//            }
-//            if(full) score++ ;
-//        }
-//        
-//        //check columns
-//        for(int i=0 ; i<SIZE ;i++){
-//            full = true ;
-//            for(int j=0 ; j<SIZE ; j++) {
-//                if(gameState.at(j,i)!= player){
-//                    full = false ;
-//                    break ;
-//                }
-//            }
-//            if(full) score++ ;
-//        }
-//        //check diagonal1
-//        full = true ;
-//        for(int i=0 ; i<SIZE ;i++){
-//            if(gameState.at(i,i)!= player){
-//                full = false ;
-//                break ;
-//            }
-//        }
-//        if(full) score++ ;
-//        
-//        //check diagonal2
-//        full = true ;
-//        for(int i=0 ; i<SIZE ;i++){
-//            if(gameState.at(SIZE-i-1,i)!= player){
-//                full = false ;
-//                break ;
-//            }
-//        }
-//        if(full) score++ ;
-//        
-//        return score ;
-//    }
+    public int getScore(GameState gameState) {
+        
+        int score = 0 ;
+        int inLinePlayer ;
+        int inLineOpponent ;
+        int inLineEmpty ;
+        
+        //check rows
+        for(int i=0 ; i<SIZE ;i++){
+            inLinePlayer = 0 ;
+            inLineOpponent = 0 ;
+            inLineEmpty = 0 ;
+            for(int j=0 ; j<SIZE ; j++) {
+                if(gameState.at(i,j)== PLAYER){
+                    inLinePlayer++ ;  
+                }
+                else if(gameState.at(i,j)== OPPONENT){
+                    inLineOpponent++ ;  
+                }
+                else{
+                    inLineEmpty++ ;
+                }
+            }
+            score+= getInlineScore(inLinePlayer,inLineEmpty, inLineOpponent);
+        }
+        
+        //check columns
+        for(int i=0 ; i<SIZE ;i++){
+            inLinePlayer = 0 ;
+            inLineOpponent = 0 ;
+            inLineEmpty = 0 ;
+            for(int j=0 ; j<SIZE ; j++) {
+                if(gameState.at(j,i)== PLAYER){
+                    inLinePlayer++ ;  
+                }
+                else if(gameState.at(j,i)== OPPONENT){
+                    inLineOpponent++ ;  
+                }
+                else{
+                    inLineEmpty++ ;
+                }
+            }
+            score+= getInlineScore(inLinePlayer,inLineEmpty, inLineOpponent);
+        }
+        //check diagonal1
+        inLinePlayer = 0 ;
+        inLineOpponent = 0 ;
+        inLineEmpty = 0 ;
+        for(int j=0 ; j<SIZE ; j++) {
+            if(gameState.at(j,j)== PLAYER){
+                inLinePlayer++ ;  
+            }
+            else if(gameState.at(j,j)== OPPONENT){
+                inLineOpponent++ ;  
+            }
+            else{
+                inLineEmpty++ ;
+            }
+        }
+        score+= getInlineScore(inLinePlayer,inLineEmpty, inLineOpponent);
+        //check diagonal2
+        inLinePlayer = 0 ;
+        inLineOpponent = 0 ;
+        inLineEmpty = 0 ;
+        for(int j=0 ; j<SIZE ; j++) {
+            if(gameState.at(j,SIZE-1-j)== PLAYER){
+                inLinePlayer++ ;  
+            }
+            else if(gameState.at(j,SIZE-1-j)== OPPONENT){
+                inLineOpponent++ ;  
+            }
+            else{
+                inLineEmpty++ ;
+            }
+        }
+        score+= getInlineScore(inLinePlayer,inLineEmpty, inLineOpponent);
+
+        return score ;
+    }
+    
+    public int getInlineScore(int player, int empty, int opponent){
+        if(player == 4) return 1000 ;
+        else if(player == 3 && empty == 1) return 100 ;
+        else if(player == 2 && empty == 2) return 10 ;
+        else if(player == 1 && empty == 0) return 1 ;
+        else if(opponent == 4) return -1000 ;
+        else if(opponent == 3 && empty == 1) return -100 ;
+        else if(opponent == 2 && empty == 2) return -10 ;
+        else if(player == 1 && empty == 0) return -1 ;
+        else return 0 ;
+        
+    }
+    public static void main(String[] args) {
+        
+    }
 }
