@@ -11,12 +11,16 @@ public class Player {
      * @return the next state the board is in after our move
      */
     int SIZE = 4 ;
+    int PLAYER ;
+    int OPPONENT ;
     
     
     public GameState play(final GameState gameState, final Deadline deadline) {
 //        System.err.print(gameState.toString(Constants.CELL_O));
         Vector<GameState> nextStates = new Vector<GameState>();
         gameState.findPossibleMoves(nextStates);
+        PLAYER = gameState.getNextPlayer() ;
+        OPPONENT = (PLAYER == Constants.CELL_X) ? Constants.CELL_O : Constants.CELL_X;
         System.err.println("Size of next State" + nextStates.size());
         int value ;
         int bestValue = Integer.MIN_VALUE ;
@@ -26,14 +30,14 @@ public class Player {
             // Must play "pass" move if there are no other moves possible.
             return new GameState(gameState, new Move());
         }
-
+        System.err.println("nextState Size" + nextStates.size());
         /**
          * Here you should write your algorithms to get the best next move, i.e.
          * the best next state. This skeleton returns a random move instead.
          */
         for(int i=0 ; i<nextStates.size() ; i++){
             System.err.println(i);
-            
+//            value =1;
             value = MiniMaxPruning(nextStates.elementAt(i),2,Integer.MIN_VALUE,Integer.MAX_VALUE,gameState.getNextPlayer()) ;
             if(value > bestValue){
                 bestValue = value ;
@@ -53,22 +57,22 @@ public class Player {
         int bestPossible ;
         int value ;
       
-        if(nextStates.size()==0)
-            return Evaluation(gameState, player) ;
+        if(gameState.isEOG())
+            return Evaluation(gameState) ;
         
-        else if(player == Constants.CELL_O){
+        else if(player == PLAYER){
             bestPossible = Integer.MIN_VALUE ;
             for(int i=0 ; i<nextStates.size() ; i++){
-                value = MiniMax(nextStates.elementAt(i), Constants.CELL_X) ;
+                value = MiniMax(nextStates.elementAt(i), OPPONENT) ;
                 bestPossible = Math.max(bestPossible, value) ;
             }
             return bestPossible ;
         }
         
-        else if(player == Constants.CELL_X){
+        else if(player == OPPONENT){
             bestPossible = Integer.MAX_VALUE ;
             for(int i=0 ; i<nextStates.size() ; i++){
-                value = MiniMax(nextStates.elementAt(i), Constants.CELL_O) ;
+                value = MiniMax(nextStates.elementAt(i), PLAYER) ;
                 bestPossible = Math.min(bestPossible, value) ;
             }
             return bestPossible ;
@@ -80,19 +84,20 @@ public class Player {
                 
     }
     
-        public int MiniMaxPruning(GameState gameState,int depth, int alpha, int beta, int player){
+    public int MiniMaxPruning(GameState gameState,int depth, int alpha, int beta, int player){
+        
         Vector<GameState> nextStates = new Vector<>();
         gameState.findPossibleMoves(nextStates);
         int bestPossible ;
         int value ;
         System.err.println("Inside MinMax Depth=   "+depth) ;
-        if(depth ==0 ||nextStates.isEmpty())
-            return Evaluation(gameState, player) ;
+        if(depth ==0 ||gameState.isEOG())
+            return Evaluation(gameState) ;
         
-        else if(player == Constants.CELL_O){
+        else if(player == PLAYER){
             bestPossible = Integer.MIN_VALUE ;
             for(int i=0 ; i<nextStates.size() ; i++){
-                value = MiniMaxPruning(nextStates.elementAt(i),depth-1, alpha, beta, Constants.CELL_X) ;
+                value = MiniMaxPruning(nextStates.elementAt(i),depth-1, alpha, beta, OPPONENT) ;
                 bestPossible = Math.max(bestPossible, value) ;
                 alpha = Math.max(bestPossible,alpha) ;
                 if(beta<=alpha) break ;
@@ -100,10 +105,10 @@ public class Player {
             return bestPossible ;
         }
         
-        else if(player == Constants.CELL_X){
+        else if(player == OPPONENT){
             bestPossible = Integer.MAX_VALUE ;
             for(int i=0 ; i<nextStates.size() ; i++){
-                value = MiniMax(nextStates.elementAt(i), Constants.CELL_O) ;
+                value = MiniMaxPruning(nextStates.elementAt(i),depth-1, alpha, beta,PLAYER) ;
                 bestPossible = Math.min(bestPossible, value) ;
                 beta = Math.min(bestPossible, beta) ;
                 if(beta<=alpha) break ;
@@ -116,10 +121,11 @@ public class Player {
                 
     }
     
-    public int Evaluation (GameState gameState, int player){
-        int opponent = (player == Constants.CELL_X) ? Constants.CELL_O : Constants.CELL_X;
+    public int Evaluation (GameState gameState){
+//        System.err.println("Player.Evaluation()");
         
-        return (getScore(gameState, player)-getScore(gameState, opponent)) ;
+        
+        return (getScore(gameState, PLAYER)-getScore(gameState, OPPONENT)) ;
         
     }
     public int getScore(GameState gameState , int player) {
