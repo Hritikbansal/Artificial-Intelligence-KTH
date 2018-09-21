@@ -1,20 +1,35 @@
 //Calling 
 //reorder_indices=ReOrder(nextStates);
 
-    public ArrayList<Int> ReOrder(ArrayList<GameState> NextStates){
-        HashMap<Integer,Integer> Map=new HashMap<>();
+public ArrayList<Integer> ReOrder(ArrayList<GameState> NextStates){
+
+        HashMap<Integer,ArrayList<Integer>> Map=new HashMap<>();
         ArrayList<Integer> Score=new ArrayList<>();
         ArrayList<Integer> Indices=new ArrayList<>();
 
         for(int i=0;i<NextStates.size();i++){
             int sc=Evaluation(NextStates.get(i));
-            HashMap.put(sc,i);
-            Score.append(sc);
+            if(Map.get(sc)==null){
+                ArrayList<Integer> tmp=new ArrayList<>();
+                tmp.add(i);
+                Map.put(sc,tmp);
+            }
+            else{
+                ArrayList<Integer> pre=Map.get(sc);
+                pre.add(i);
+                Map.put(sc,pre);
+
+            }
+            Score.add(sc);
         } 
 
         Collections.reverse(Score);
+
         for(int j=0;j<Score.size();j++){
-            Indices.add(Score.get(j));
+            ArrayList<Integer> getInd=Map.get(Score.get(j));
+            for(int k=0;k<getInd.size();k++){
+                Indices.add(getInd.get(k));
+            }
         }
 
         return Indices;
