@@ -49,7 +49,7 @@ public class Player {
             return new GameState(gameState, new Move());
         }
 //        CHECK_STATES_NO = nextStateSize ;
-        if(nextStateSize>45) depth =1 ;
+        if(nextStateSize>50) depth =1 ;
         else if(nextStateSize>35) depth =2 ;
         else if(nextStateSize>20) depth =3 ;
         else if(nextStateSize>10) depth =4 ;
