@@ -22,3 +22,5 @@ java Main verbose > pipe1 < pipe2
 # To play two different agents against each other, you can use the classpath argument
 java -classpath <path> Main init verbose < pipe | java -classpath <path> Main > pipe
 
+Heuristic Paper->
+http://www.cs.columbia.edu/~devans/TIC/AB.html
